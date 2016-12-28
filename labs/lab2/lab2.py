@@ -42,3 +42,35 @@ ied footman that morning, ran as follows:
     tween 7 and 10 Annette Sch^rer." 
 
 '''
+
+
+# Solution for 1A
+
+
+length = len(Sentence.split())
+print ("Total number of words =  %d\n"  % (length))
+
+# Solution for 1B
+
+wordtocount = input ("Please enter the word you want to count: ")
+counter = Sentence.count(wordtocount)
+print (Sentence.count(wordtocount))
+
+# Solution for 1C
+insertstring = input ("Please enter the string you want to insert")
+
+position = int(input("Please enter the insertion point: "))
+
+newSentence = Sentence[0:position] + insertstring+ Sentence[position::]
+print (newSentence)
+
+
+# Solution for 1D
+
+print (Sentence[::-1])
+
+# Solution for 1E
+
+nth = int(input("Please specify nth position: "))
+foo =  [word[1].upper() if word[0] % nth == 0  else word[1] for word in enumerate(Sentence.split())]
+print (" ".join(foo))
