@@ -132,7 +132,7 @@ if __name__ == '__main__':
 #print (ebd.searchresults)
 #ebd.QueryByDate('01-Jan-2010')
 #print (ebd.searchresults)
-#ebd.QueryBySubject('Chemistry')
-#print (ebd.searchresults)
-# print (ebd.ebookDict)
-print ('{h[0]} \t {h[1]} \t {h[2]}'.format(h=headers))
+ebd.QueryBySubject('Chemistry')
+print ('{h[1]} \t {h[3]} \t {h[4]} \t {h[5]}\t {h[6]}\t{h[12]}'.format(h=headers))
+for srec in ebd.searchresults:
+    print ('{s[1]} \t {s[3]} \t {s[4]} \t {s[5]} \t {s[6]} \t {s[12]}\n'.format(s = srec))
