@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import re
+import datetime
 
 class eBook(object):
 
@@ -57,30 +58,33 @@ class eBooks(object):
     def QueryByStatus(self):
     
         self.resetSearchResults()
-        for key in ebookDict.keys():
-            if 'active' in ebookDict[key[12]]:
-                eBooks.searchresults.append(ebookDict[key])
+        for key in self.ebookDict.keys():
+            if 'active' in self.ebookDict[key][12]:
+                eBooks.searchresults.append(self.ebookDict[key])
 
                 
 
 # Query the books by the query date.  Return active books published after the query date. 
     def QueryByDate(self,querydate):
         self.resetSearchResults()
-        querydate = datetime.strptime(querytime,'%d-%b-%Y').date()
-        for key in ebookDict.keys():
-            if 'active' in ebookDict[key][12].lower() and querydate > datetime.strptime(record[11],'%d-%b-%Y').date():
-                searchResults.append(ebookDict[key])
+        querydate = datetime.datetime.strptime(querydate,'%d-%b-%Y').date()
+        for key in self.ebookDict.keys():
+            try:
+                if 'active' in self.ebookDict[key][12].lower() and querydate > datetime.datetime.strptime(record[11],'%d-%b-%Y').date():
+                    eBooks.searchresults.append(self.ebookDict[key])
+            except ValueError:
+                continue
 
-        return searchResults
+        return eBooks.searchresults
 
 # Query the books by the subject.  Note that although we use a regular expression here, 
 # We could have just as easily used the 'in' operation. 
 
     def QueryBySubject(self,subjecttoquery):
        self.resetSearchResults()
-       for key in ebookDict.keys():
+       for key in self.ebookDict.keys():
            if re.search('eBook - ([a-zA-Z]+).*',ebookDict[key][1]):
-               searchResults.append(ebookDict[key])
+               eBooks.searchresults.append(self.ebookDict[key])
 
             
 
@@ -97,8 +101,14 @@ if __name__ == '__main__':
         for eb in ebookdata:
             record = eb.strip().split(',')
             try:
-                ebd.addEBook(record[4],eBook(record))
+     #           ebd.addEBook(record[4],eBook(record))
+                ebd.addEBook(record[4],record)
             except KeyError:
                 continue
 
 # More testing code can be done here.
+
+#ebd.QueryByStatus()
+#print (ebd.searchresults)
+ebd.QueryByDate('01-Jan-2010')
+print (ebd.searchresults)
