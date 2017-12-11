@@ -2,6 +2,7 @@
 
 #import re
 import datetime
+import csv
 
 class eBook(object):
 
@@ -114,14 +115,16 @@ if __name__ == '__main__':
 
 # Read all the data in the data source and add th e3ebooks to the ebooks object.
     with open('data/ebook2016.csv') as ebookdata:
-        ebookdata.readline()
-        for eb in ebookdata:
-            record = eb.strip().split(',')
+        eb = csv.reader(ebookdata)
+        headers = next(eb)
+
+        for record in eb:
             try:
                 ebd.addEBook(record[4],eBook(record))
-     #           ebd.addEBook(record[4],record)
             except KeyError:
                 continue
+
+#
 
 # More testing code can be done here.
 
@@ -129,5 +132,7 @@ if __name__ == '__main__':
 #print (ebd.searchresults)
 #ebd.QueryByDate('01-Jan-2010')
 #print (ebd.searchresults)
-ebd.QueryBySubject('Chemistry')
-print (ebd.searchresults)
+#ebd.QueryBySubject('Chemistry')
+#print (ebd.searchresults)
+# print (ebd.ebookDict)
+print ('{h[0]} \t {h[1]} \t {h[2]}'.format(h=headers))
