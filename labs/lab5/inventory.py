@@ -1,5 +1,6 @@
 
 import csv
+import sys
 
 class InventoryFileException (Exception):
     pass
@@ -15,13 +16,18 @@ class Inventory:
 
 
     def readfile(self):
+        line_count = 0
         try:
             self.fhandle = open(self.file)
-            reader = csv_reader(self.fhandle)
-            self.headers = reader.readline()
+            reader = csv.reader(self.fhandle)
             for row in reader:
+                if line_count == 0:
+                    self.headers = row
+                    line_count += 1
+                    continue
+                line_count += 1
                 self.inventory_dictionary[row[0]] = row[1:]
-                return True
+            return True
         except FileNotFoundError:
             raise InventoryFileException("Error:  File not found")
         finally:
@@ -33,15 +39,7 @@ class Inventory:
 
     def getCostOfInventoryData(self):
 
-        compiled_report_list = []
-        for (key,value) in self.inventory_dictionary:
-            report_row =[]
-            report_row[0] = key
-            report_row[1] = value[1]
-            report_row[2] = value[3] * value[4]
-            compiled_report_list.append(report_row)
-
-        return compiled_report_list
+       return self.inventory_dictionary
 
     def set_itemname(self,SKU,new_name):
         try:
@@ -58,20 +56,27 @@ class Inventory:
             raise InventoryNoKeyFoundException("Error:  Invalid SKU")
             return False
 
-def cost_of_inventory_report(compiled_data):
+def cost_of_inventory_report(data):
+
+    cost_of_inv_data = {}
     total = 0
+    count = 0
     print("SKU\t\tItem Name\t\tCost Of Inventory")
-    for row in compiled_data:
-        print (row)
-        total += row[2]
-    print (f"Number of items processed: {len(compiled_data)}")
-    print (f"Total Cost of Inventory: {total}")
+    for (key,value) in data.items():
+        count += 1
+        cost_of_inventory = float(value[1].lstrip('$')) * int(value[2])
+        total += cost_of_inventory
+        print (f"{key} {value[0]}  ${cost_of_inventory}")
+
+    print (f"Number of items processed: {count}")
+    print (f"Total Cost of Inventory: ${total}")
     return
 
 
 
 def main():
-    filepath = r"C:\Users\User\basicpython\labs\lab5\data\inventory.dat"
+    filepath = r"C:\Users\User\basicpython\labs\lab5\data\inventory.csv"
+    filepath = r"C:\Users\User\basicpython\labs\lab5\data\inventory.csv"
     inventory = Inventory(filepath)
     cost_of_inventory_report(inventory.getCostOfInventoryData())
 
